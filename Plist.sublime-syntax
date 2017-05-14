@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+name: Plist
+hidden: true
+file_extensions:
+  - plist
+scope: text.plist
+contexts:
+  main:
+
+    - match: '^\s*(?:(✔)(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))'
+      scope: meta.item.pack.name.enabled
+      captures:
+        1: punctuation.definition.bullet.enabled.pack
+        3: punctuation.definition.pack.name.enabled
+    - match: '^\s*(?:(☐)(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))'
+      scope: meta.item.pack.name.disabled
+      captures:
+        1: punctuation.definition.bullet.disabled.pack
+        3: punctuation.definition.pack.name.disabled

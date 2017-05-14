@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Notebook</string>
+	<key>settings</key>
+	<array>
+		<dict>
+			<key>settings</key>
+			<dict>
+			  <key>background</key>
+			  <string>#000000</string><!-- base3 -->
+			  <key>caret</key>
+			  <string>#000000</string><!-- (nonstandard; black) -->
+			  <key>foreground</key>
+			  <string>#586E75</string><!-- base01 -->
+			  <key>invisibles</key>
+			  <string>#66001B</string>
+			  <key>lineHighlight</key>
+			  <string>#66001B</string><!-- base2 -->
+			  <key>selection</key>
+			  <string>#66001B</string><!-- base2 -->
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>enabled bullet</string>
+			<key>scope</key>
+			<string>punctuation.definition.bullet.enabled.pack</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#078203</string><!-- green -->
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>enabled name</string>
+			<key>scope</key>
+			<string>punctuation.definition.pack.name.enabled</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#078203</string><!-- green -->
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>disabled bullet</string>
+			<key>scope</key>
+			<string>punctuation.definition.bullet.disabled.pack</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#DBDBDB</string><!-- blue -->
+				<key>fontStyle</key>
+				<string></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>disabled name</string>
+			<key>scope</key>
+			<string>punctuation.definition.pack.name.disabled</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#DBDBDB</string><!-- blue -->
+				<key>fontStyle</key>
+				<string></string>
+			</dict>
+		</dict>
+	</array>
+	<key>uuid</key>
+	<string>FE674D9A-27B3-4A5A-84F7-1CC67BD29531</string>
+</dict>
+</plist>
