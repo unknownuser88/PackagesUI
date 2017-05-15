@@ -9,18 +9,17 @@
 		<dict>
 			<key>settings</key>
 			<dict>
-			  <key>background</key>
-			  <string>#000000</string><!-- base3 -->
-			  <key>caret</key>
-			  <string>#000000</string><!-- (nonstandard; black) -->
-			  <key>foreground</key>
-			  <string>#586E75</string><!-- base01 -->
-			  <key>invisibles</key>
-			  <string>#66001B</string>
-			  <key>lineHighlight</key>
-			  <string>#66001B</string><!-- base2 -->
-			  <key>selection</key>
-			  <string>#66001B</string><!-- base2 -->
+				<key>background</key><string>#2d2d2d</string>
+				<key>caret</key><string>#d3d0c8</string>
+				<key>foreground</key><string>#d3d0c8</string>
+				<key>invisibles</key><string>#EAE3C9</string>
+				<key>lineHighlight</key><string>#353535</string>
+				<key>selection</key><string>#000000</string>
+				<key>popupCss</key>
+				<string><![CDATA[
+					html, body {color: #d3d0c8; background-color: #2d2d2d}
+					a {color: #ACC6F6;}
+				]]></string>
 			</dict>
 		</dict>
 		<dict>
