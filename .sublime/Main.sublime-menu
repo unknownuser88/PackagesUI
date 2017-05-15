@@ -1,0 +1,14 @@
+[{
+    "caption": "Preferences",
+    "mnemonic": "n",
+    "id": "preferences",
+    "children":
+    [
+        {
+            "caption": "Packages UI",
+            "mnemonic": "P",
+            "id": "packages-ui",
+            "command": "plist"
+        }
+    ]
+}]

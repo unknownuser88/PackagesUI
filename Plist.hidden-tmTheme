@@ -24,6 +24,32 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>help symbol</string>
+			<key>scope</key>
+			<string>punctuation.definition.help.symbol</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#5A5EF8</string>
+				<key>fontStyle</key>
+				<string></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>help title</string>
+			<key>scope</key>
+			<string>punctuation.definition.help.title</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#AFAFAF</string>
+				<key>fontStyle</key>
+				<string></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>enabled bullet</string>
 			<key>scope</key>
 			<string>punctuation.definition.bullet.enabled.pack</string>
@@ -76,6 +102,6 @@
 		</dict>
 	</array>
 	<key>uuid</key>
-	<string>FE674D9A-27B3-4A5A-84F7-1CC67BD29531</string>
+	<string>FE674D9A-27B3-4A5A-84F7-1CC67BD27531</string>
 </dict>
 </plist>

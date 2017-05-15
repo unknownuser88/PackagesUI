@@ -1,0 +1,9 @@
+Packages UI
+===============================
+
+If you like this plugin, "Star" it on ---> https://github.com/unknownuser88/PackagesUI <---
+
+Usage
+=============
+
+Preferences->Packages UI

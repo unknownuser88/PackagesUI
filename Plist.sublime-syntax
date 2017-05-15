@@ -8,6 +8,12 @@ scope: text.plist
 contexts:
   main:
 
+    - match: '\[([a-z])\](\s)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)'
+      scope: meta.item.pack.help
+      captures:
+        1: punctuation.definition.help.symbol
+        3: punctuation.definition.help.title
+
     - match: '^\s*(?:(✔)(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))'
       scope: meta.item.pack.name.enabled
       captures:

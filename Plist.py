@@ -32,9 +32,10 @@ class PlistCommand(sublime_plugin.WindowCommand):
 		view.settings().set('highlight_line', True)
 		view.settings().set("font_face", "Consolas")
 		view.settings().set("line_numbers", True)
-		view.settings().set("font_size", 13)
-		# view.settings().set("rulers", [40])
-		view.settings().set("word_wrap", True)
+		view.settings().set("font_size", 12)
+		view.settings().set("caret_style", "solid")
+		# view.settings().set("rulers", [33])
+		# view.settings().set("word_wrap", True)
 		view.set_syntax_file('Packages/PackagesUI/Plist.sublime-syntax')
 		view.set_scratch(True)
 		view.set_name(bullet_enabled + " Packages")
@@ -53,7 +54,7 @@ class PlistCommand(sublime_plugin.WindowCommand):
 class RenderlistCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 
-		print('render-----------------------------------------------------------------')
+		print('[Packages UI] render')
 		self.view.set_read_only(False)
 		selections = self.view.sel()
 		full_region = sublime.Region(0, self.view.size())
@@ -70,17 +71,25 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 			l = u"\t{nshan} {packName}{e}".format(packName=pack, nshan=nshan, e="\n")
 			self.view.insert(edit, 0, l)
 
+		header = '''	############ 		Keys
+	##   Packages   ##		[t] toggle package
+	############ 		[r] refresh view
+------------------------------------------------------------------------------------------\n'''
+
+		self.view.insert(edit, 0, header)
 		self.view.set_read_only(True)
 
+		pt = self.view.text_point(3, 0)
 		self.view.sel().clear()
-		self.view.sel().add(sublime.Region(0))
+		self.view.sel().add(sublime.Region(pt))
+		self.view.show(pt)
 
 
 class TogglePackCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 		reg = r"^\s*(?:("+bullet_enabled+"|"+bullet_disabled+")(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))"
-
 		for cursor in self.view.sel():
+			pack = None
 			line_region = self.view.line(cursor)
 			string = self.view.substr(line_region)
 			matches = re.finditer(reg, string)
@@ -90,10 +99,11 @@ class TogglePackCommand(sublime_plugin.TextCommand):
 				nshan = bullet_disabled if match.group(1) == bullet_enabled else bullet_enabled
 				string = string.replace(match.group(1), nshan)
 
-			self.toggle(pack, self.view)
-			self.view.set_read_only(False)
-			self.view.replace(edit, line_region, string)
-			self.view.set_read_only(True)
+			if pack:
+				self.toggle(pack, self.view)
+				self.view.set_read_only(False)
+				self.view.replace(edit, line_region, string)
+				self.view.set_read_only(True)
 
 	def toggle(self, pack, view):
 		user_s = sublime.load_settings('Preferences.sublime-settings')
