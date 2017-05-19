@@ -1,11 +1,34 @@
 import sublime
 import sublime_plugin
 import re
+import zipfile
+import json 
+import os 
 
 bullet_enabled = '✔'
 bullet_disabled = '☐'
 
-class PlistCommand(sublime_plugin.WindowCommand):
+class OnLoadedViewCommand( sublime_plugin.ViewEventListener ):
+	def check(self): 
+		sett = self.view.settings()
+		return sett.get("plist.interface") != 'plist' or not sett.get("showInfo")
+
+	def on_selection_modified( self ):
+		if self.check():
+			return
+		show_info_in_panel(self.view)
+
+	# def on_deactivated( self ):
+	# 	if self.check():
+	# 		return
+	# 	sublime.active_window().run_command("hide_panel", {"panel": "output.info"})
+
+	# def on_activated( self ):
+	# 	if self.check():
+	# 		return
+	# 	sublime.active_window().run_command("show_panel", {"panel": "output.info"})
+
+class PackagesUiCommand(sublime_plugin.WindowCommand):
 	def run(self):
 		plistView = None
 		window = sublime.active_window()
@@ -22,7 +45,7 @@ class PlistCommand(sublime_plugin.WindowCommand):
 		plistView.run_command("renderlist")
 
 	def settchange(self, view):
-		print("pass")
+		pass
 
 	def create_view(self):
 		view = self.window.new_file()
@@ -34,9 +57,10 @@ class PlistCommand(sublime_plugin.WindowCommand):
 		view.settings().set("line_numbers", True)
 		view.settings().set("font_size", 12)
 		view.settings().set("caret_style", "solid")
+		view.settings().set("showInfo", False)
 		# view.settings().set("rulers", [33])
 		# view.settings().set("word_wrap", True)
-		view.set_syntax_file('Packages/PackagesUI/Plist.sublime-syntax')
+		view.set_syntax_file('Packages/PackagesUI/syntax/Plist.sublime-syntax')
 		view.set_scratch(True)
 		view.set_name(bullet_enabled + " Packages")
 
@@ -50,7 +74,6 @@ class PlistCommand(sublime_plugin.WindowCommand):
 		if sublime.load_settings("Plist.sublime-settings").get("vintageous_friendly", False) is False:
 			view.settings().set("__vi_external_disable", False)
 	
-
 class RenderlistCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 
@@ -71,11 +94,10 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 			l = u"\t{nshan} {packName}{e}".format(packName=pack, nshan=nshan, e="\n")
 			self.view.insert(edit, 0, l)
 
-		header = '''	############ 		Keys
-	##   Packages   ##		[t] toggle package
-	############ 		[r] refresh view
-------------------------------------------------------------------------------------------\n'''
-
+		header = """	╔═════════════╗		[t] toggle package
+	║    PACKAGES     ║		[r] refresh view
+	╚═════════════╝ 		[i] show info"""
+		header += "\n" + "━"*60 + "\n"
 		self.view.insert(edit, 0, header)
 		self.view.set_read_only(True)
 
@@ -83,27 +105,31 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 		self.view.sel().clear()
 		self.view.sel().add(sublime.Region(pt))
 		self.view.show(pt)
-
+		sublime.active_window().run_command("hide_panel", {"panel": "output.info"})
+		self.view.settings().set("showInfo", False)
 
 class TogglePackCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 		reg = r"^\s*(?:("+bullet_enabled+"|"+bullet_disabled+")(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))"
+		packs = []
 		for cursor in self.view.sel():
 			pack = None
-			line_region = self.view.line(cursor)
-			string = self.view.substr(line_region)
-			matches = re.finditer(reg, string)
-
-			for match in matches:
+			line_regions = self.view.lines(cursor)
+			for line_region in line_regions:
+				string = self.view.substr(line_region)
+				match = re.match(reg, string)
+				if not match:
+					continue
 				pack = match.group(3)
 				nshan = bullet_disabled if match.group(1) == bullet_enabled else bullet_enabled
-				string = string.replace(match.group(1), nshan)
+				string = string.replace(match.group(1), nshan, 1)
 
-			if pack:
-				self.toggle(pack, self.view)
-				self.view.set_read_only(False)
-				self.view.replace(edit, line_region, string)
-				self.view.set_read_only(True)
+				if pack and pack not in packs:
+					packs.append(pack)
+					self.toggle(pack, self.view)
+					self.view.set_read_only(False)
+					self.view.replace(edit, line_region, string)
+					self.view.set_read_only(True)
 
 	def toggle(self, pack, view):
 		user_s = sublime.load_settings('Preferences.sublime-settings')
@@ -116,11 +142,96 @@ class TogglePackCommand(sublime_plugin.TextCommand):
 
 		save_list_setting(user_s, 'Preferences.sublime-settings', "ignored_packages", ignored_packages)
 
+class GetPackInfoCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		reg = r"^\s*(?:("+bullet_enabled+"|"+bullet_disabled+")(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))"
+		popupCont = []
+		packs = []
+		for cursor in self.view.sel():
+			line_region = self.view.line(cursor)
+			string = self.view.substr(line_region)
+			matches = re.findall(reg, string)
 
-############################
-# IN-VIEW HELPER FUNCTIONS #
-############################
-		
+			if not matches:
+				continue
+
+			pack = matches[0][2]
+
+			if pack and pack not in packs:
+				info = getPackInfo(pack)
+				infoToShow = [
+					"<p class='row'><span class='title'>Name: </span><span class='val'>" + pack + "</span></p>",
+					"<p class='row'><span class='title version'>Version: </span><span class='val version'>" + info.get('version', '') + "</span></p>",
+					"<p class='desc'>" + info.get('description', '') + "</p>"
+				]
+				packs.append(pack)
+				popupCont.append("".join(infoToShow))
+
+		if popupCont:
+			css = """<style>
+				html{background-color:#000000}
+				body{background-color:#000000}
+				.mainTitle{font-size:20px;font-weight: bold;padding: 5px 155px  ;margin:0 0 10px 0;}
+				.row{margin: 0; padding: 0px 20px}
+				.title{font-size:15px;}
+				.desc{font-size:12px;color:#B0A7FF;padding:0 20px}
+				.val{font-size:15px;color:#BDBDBD;padding:0 5px}
+				.version{font-size:13spx;}
+			</style>"""
+
+			popup_max_width = 400
+			popup_max_height = 600
+			html = "<html>"+css+"<body><h5 class='mainTitle'>Info</h5>" + "<br>".join(popupCont)+"</body></html>"
+			self.view.show_popup(html, 0, -1, popup_max_width, popup_max_height)
+
+class toggleInfoPanelCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		showInfo = self.view.settings().get("showInfo")
+		if showInfo:
+			sublime.active_window().run_command("hide_panel", {"panel": "output.info"})
+		else:
+			show_info_in_panel(self.view)
+			sublime.active_window().run_command("show_panel", {"panel": "output.info"})
+		self.view.settings().set("showInfo", not showInfo)
+
+
+
+def show_info_in_panel(view):
+	reg = r"^\s*(?:("+bullet_enabled+"|"+bullet_disabled+")(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))"
+	popupCont = []
+	packs = []
+	for cursor in view.sel():
+		pack = None
+		line_regions = view.lines(cursor)
+		for line_region in line_regions:
+			string = view.substr(line_region)
+			match = re.match(reg, string)
+			if not match:
+				continue
+			pack = match.group(3)
+
+			if pack and pack not in packs:
+				info = getPackInfo(pack)
+				packs.append(pack)
+				infoToShow = [
+					"Name:        " + pack,
+					"Version:     " + info.get('version', ''),
+					"Url:         " + info.get('url', ''),
+					# "Paltforms:   " + ", ".join(info.get('platforms', [])),
+					"Description: " + info.get('description', ''),
+				]
+				popupCont.append("\n".join(infoToShow))
+
+	if popupCont:
+		output_view = view.window().create_output_panel("info")
+		output_view.set_read_only(False)
+		text = ("\n" + "┄"*100 + "\n").join(popupCont)
+		output_view.run_command("gs_replace_view_text", {"text": text, "nuke_cursors": False})
+		output_view.set_syntax_file("Packages/PackagesUI/syntax/Packinfo.sublime-syntax")
+		output_view.sel().clear()
+		output_view.set_read_only(True)
+		# view.window().run_command("show_panel", {"panel": "output.info"})
+
 def save_list_setting(settings, filename, name, new_value, old_value=None):
 	new_value = list(set(new_value))
 	new_value = sorted(new_value, key=lambda s: s.lower())
@@ -131,4 +242,26 @@ def save_list_setting(settings, filename, name, new_value, old_value=None):
 
 	settings.set(name, new_value)
 	sublime.save_settings(filename)
+
+def getPackInfo(package):
+	package_location = os.path.join(sublime.installed_packages_path(), package + ".sublime-package")
+
+	if not os.path.exists(package_location):
+		package_location = os.path.join(os.path.dirname(sublime.packages_path()), "Packages", package)
+
+		with open(os.path.join(package_location, "package-metadata.json")) as pack:    
+			data = json.load(pack)
+			return data
+
+		if not os.path.isdir(package_location):
+			return False
+
+	if package_location:
+		with zipfile.ZipFile(sublime.installed_packages_path() + '/' + package + '.sublime-package', "r") as z:
+			file = z.read('package-metadata.json')
+			d = json.loads(file.decode("utf-8"))
+		return d
+	return False
+
+
 

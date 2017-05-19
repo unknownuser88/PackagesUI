@@ -15,5 +15,13 @@
 			"operator": "equal",
 			"operand": "text.plist"
 		}]
+	}, {
+		"keys": ["i"],
+		"command": "toggle_info_panel",
+		"context": [{
+			"key": "selector",
+			"operator": "equal",
+			"operand": "text.plist"
+		}]
 	}
 ]

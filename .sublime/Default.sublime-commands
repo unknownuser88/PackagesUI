@@ -1,4 +1,4 @@
 [{
 	"caption": "Packages UI",
-	"command": "plist"
+	"command": "packages_ui"
 }]

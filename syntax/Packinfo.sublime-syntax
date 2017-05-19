@@ -1,0 +1,12 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
+name: Pack Info
+hidden: true
+scope: text.plist.info
+contexts:
+  main:
+    - match: (Name|Version|Url|Description):(\s+)(.+)
+      scope: meta.item.pack.info.panel
+      captures:
+        1: string.other.pack.info
