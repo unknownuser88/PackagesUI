@@ -9,7 +9,7 @@
 		<dict>
 			<key>settings</key>
 			<dict>
-				<key>background</key><string>#2d2d2d</string>
+				<key>background</key><string>#212121</string>
 				<key>caret</key><string>#d3d0c8</string>
 				<key>foreground</key><string>#d3d0c8</string>
 				<key>invisibles</key><string>#EAE3C9</string>
@@ -56,7 +56,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#078203</string><!-- green -->
+				<string>#3D916B</string><!-- green -->
 				<key>fontStyle</key>
 				<string>bold</string>
 			</dict>
@@ -69,7 +69,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#078203</string><!-- green -->
+				<string>#3D916B</string><!-- green -->
 				<key>fontStyle</key>
 				<string>bold</string>
 			</dict>
@@ -82,7 +82,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#DBDBDB</string><!-- blue -->
+				<string>#B4B4B4</string><!-- blue -->
 				<key>fontStyle</key>
 				<string></string>
 			</dict>
@@ -95,7 +95,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#DBDBDB</string><!-- blue -->
+				<string>#B4B4B4</string><!-- blue -->
 				<key>fontStyle</key>
 				<string></string>
 			</dict>
