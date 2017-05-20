@@ -14,8 +14,14 @@ class OnLoadedViewCommand( sublime_plugin.ViewEventListener ):
 		return sett.get("plist.interface") != 'plist' or not sett.get("showInfo")
 
 	def on_selection_modified( self ):
-		if self.check():
+		if self.view.settings().get("plist.interface") != 'plist':
 			return
+
+		# markActivePack(self.view)
+
+		if  not self.view.settings().get("showInfo"):
+			return
+			
 		show_info_in_panel(self.view)
 
 	# def on_deactivated( self ):
@@ -27,6 +33,29 @@ class OnLoadedViewCommand( sublime_plugin.ViewEventListener ):
 	# 	if self.check():
 	# 		return
 	# 	sublime.active_window().run_command("show_panel", {"panel": "output.info"})
+
+class ChangeFontSizeCommand(sublime_plugin.WindowCommand):
+
+	def run(self, plus):
+		print("plus", plus)
+
+		plistView = None
+		window = sublime.active_window()
+		for view in window.views():
+			vset = view.settings()
+			if vset.get("plist.interface") == 'plist':
+				plistView = view
+		if plistView:
+			print("plistView.settings().get(\"font_size\")+1", plistView.settings().get("font_size")+1)
+			oldSize = plistView.settings().get("font_size")
+			if plus:
+				newSize = oldSize + 1
+			else:
+				newSize = oldSize - 1
+			print("newSize", newSize)
+
+			plistView.settings().set("font_size", newSize)
+
 
 class PackagesUiCommand(sublime_plugin.WindowCommand):
 	def run(self):
@@ -95,7 +124,7 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 			self.view.insert(edit, 0, l)
 
 		header = """	╔═════════════╗		[t] toggle package
-	║    PACKAGES     ║		[r] refresh view
+	      PACKAGES      		[r] refresh view
 	╚═════════════╝ 		[i] show info"""
 		header += "\n" + "━"*60 + "\n"
 		self.view.insert(edit, 0, header)
@@ -110,9 +139,11 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 
 class TogglePackCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
+		# print("QAQ")
 		reg = r"^\s*(?:("+bullet_enabled+"|"+bullet_disabled+")(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))"
 		packs = []
 		for cursor in self.view.sel():
+			# print("cursor", cursor)
 			pack = None
 			line_regions = self.view.lines(cursor)
 			for line_region in line_regions:
@@ -194,6 +225,23 @@ class toggleInfoPanelCommand(sublime_plugin.TextCommand):
 			sublime.active_window().run_command("show_panel", {"panel": "output.info"})
 		self.view.settings().set("showInfo", not showInfo)
 
+
+def markActivePack(view):
+
+	reg = r"^\s*(?:("+bullet_enabled+"|"+bullet_disabled+")(\s+))"
+	packs = []
+	regions = []
+	for cursor in view.sel():
+		pack = None
+		line_regions = view.lines(cursor)
+		for line_region in line_regions:
+			string = view.substr(line_region)
+			match = re.match(reg, string)
+			if not match:
+				continue
+			regions.append(sublime.Region(line_region.a+1,line_region.b))
+
+	view.add_regions('active', regions, "string.poiner", flags=sublime.DRAW_NO_FILL)
 
 
 def show_info_in_panel(view):

@@ -23,5 +23,23 @@
 			"operator": "equal",
 			"operand": "text.plist"
 		}]
+	}, {
+		"keys": ["+"],
+		"command": "change_font_size",
+		"context": [{
+			"key": "selector",
+			"operator": "equal",
+			"operand": "text.plist"
+		}],
+		"args": {"plus": true}
+	}, {
+		"keys": ["-"],
+		"command": "change_font_size",
+		"context": [{
+			"key": "selector",
+			"operator": "equal",
+			"operand": "text.plist"
+		}],
+		"args": {"plus": false}
 	}
 ]

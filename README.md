@@ -9,5 +9,7 @@ Preferences->Packages UI
 
 ## Screenshots
 
-![Javascript](https://github.com/unknownuser88/PackagesUI/raw/master/images/demo.gif)
+![Demo](https://github.com/unknownuser88/PackagesUI/raw/demo/images/demo.gif)
+
+![Pack Info](https://github.com/unknownuser88/PackagesUI/raw/demo/images/packs_info.png)
 
