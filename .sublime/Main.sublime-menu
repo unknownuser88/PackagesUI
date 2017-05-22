@@ -8,7 +8,7 @@
             "caption": "Packages UI",
             "mnemonic": "P",
             "id": "packages-ui",
-            "command": "plist"
+            "command": "packages_ui"
         }
     ]
 }]
