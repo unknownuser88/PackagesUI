@@ -123,7 +123,7 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 			l = u"\t{nshan} {packName}{e}".format(packName=pack, nshan=nshan, e="\n")
 			self.view.insert(edit, 0, l)
 
-		header = """	╔═════════════╗		[t] toggle package
+		header = u"""	╔═════════════╗		[t] toggle package
 	      PACKAGES      		[r] refresh view
 	╚═════════════╝ 		[i] show info"""
 		header += "\n" + "━"*60 + "\n"
@@ -268,12 +268,12 @@ def show_info_in_panel(view):
 					# "Paltforms:   " + ", ".join(info.get('platforms', [])),
 					"Description: " + info.get('description', ''),
 				]
-				popupCont.append("\n".join(infoToShow))
+				popupCont.append(u"\n".join(infoToShow))
 
 	if popupCont:
 		output_view = view.window().create_output_panel("info")
 		output_view.set_read_only(False)
-		text = ("\n" + "┄"*100 + "\n").join(popupCont)
+		text = ("\n" + u"┄"*100 + "\n").join(popupCont)
 		output_view.run_command("gs_replace_view_text", {"text": text, "nuke_cursors": False})
 		output_view.set_syntax_file("Packages/PackagesUI/syntax/Packinfo.sublime-syntax")
 		output_view.sel().clear()
