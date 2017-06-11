@@ -8,29 +8,29 @@ import os
 bullet_enabled = '✔'
 bullet_disabled = '☐'
 
-class OnLoadedViewCommand( sublime_plugin.ViewEventListener ):
-	def check(self): 
-		sett = self.view.settings()
+class OnLoadedViewCommand( sublime_plugin.EventListener ):
+	def check(self, view): 
+		sett = view.settings()
 		return sett.get("plist.interface") != 'plist' or not sett.get("showInfo")
 
-	def on_selection_modified( self ):
-		if self.view.settings().get("plist.interface") != 'plist':
+	def on_selection_modified( self, view):
+		if view.settings().get("plist.interface") != 'plist':
 			return
 
-		# markActivePack(self.view)
+		# markActivePack(view)
 
-		if  not self.view.settings().get("showInfo"):
+		if  not view.settings().get("showInfo"):
 			return
 			
-		show_info_in_panel(self.view)
+		show_info_in_panel(view)
 
-	def on_deactivated_async( self ):
-		if self.check():
+	def on_deactivated_async( self, view):
+		if self.check(view):
 			return
 		sublime.active_window().run_command("hide_panel", {"panel": "output.info"})
 
-	def on_activated_async( self ):
-		if self.check():
+	def on_activated_async( self, view):
+		if self.check(view):
 			return
 		sublime.active_window().run_command("show_panel", {"panel": "output.info"})
 
