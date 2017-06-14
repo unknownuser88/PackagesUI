@@ -78,13 +78,21 @@ class PackagesUiCommand(sublime_plugin.WindowCommand):
 		view.settings().set('color_scheme', "Packages/PackagesUI/Plist.hidden-tmTheme")
 		view.settings().set("plist.interface", 'plist')
 		view.settings().set('highlight_line', True)
-		view.settings().set("font_face", "Consolas")
+		# view.settings().set("font_face", "Consolas")
 		view.settings().set("line_numbers", True)
 		view.settings().set("font_size", 12)
+		view.settings().set("spell_check", False)
+		view.settings().set("scroll_past_end", False)
+		view.settings().set("draw_centered", False)
+		view.settings().set("line_padding_bottom", 2)
+		view.settings().set("line_padding_top", 2)
+
 		view.settings().set("caret_style", "solid")
+		view.settings().set("tab_size", 4)
+		view.settings().set("default_encoding", "UTF-8")
 		view.settings().set("showInfo", False)
 		# view.settings().set("rulers", [33])
-		# view.settings().set("word_wrap", True)
+		view.settings().set("word_wrap", False)
 		view.set_syntax_file('Packages/PackagesUI/syntax/Plist.sublime-syntax')
 		view.set_scratch(True)
 		view.set_name(bullet_enabled + " Packages")
@@ -116,13 +124,13 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 
 		for index, pack in enumerate(installed_packages[::-1]):
 			nshan = bullet_disabled if pack in ignored_packages else bullet_enabled
-			l = u"\t{nshan} {packName}{e}".format(packName=pack, nshan=nshan, e="\n")
+			l = u"    {nshan} {packName}{e}".format(packName=pack, nshan=nshan, e="\n")
 			self.view.insert(edit, 0, l)
 
-		header = u"""	╔═════════════╗		[t] toggle package
-	      PACKAGES      		[r] refresh view
-	╚═════════════╝ 		[i] show info"""
-		header += "\n" + "━"*60 + "\n"
+		header = u"""    ================             [t] toggle package
+        PACKAGES                 [r] refresh view
+    ================             [i] show info"""
+		header += "\n" + "-"*60 + "\n"
 		self.view.insert(edit, 0, header)
 		self.view.set_read_only(True)
 
@@ -166,48 +174,6 @@ class TogglePackCommand(sublime_plugin.TextCommand):
 			ignored_packages.append(pack)
 
 		save_list_setting(user_s, 'Preferences.sublime-settings', "ignored_packages", ignored_packages)
-
-class GetPackInfoCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
-		reg = r"^\s*(?:("+bullet_enabled+"|"+bullet_disabled+")(\s+)((?:[^\@\n]|(?<!\s)\@|\@(?=\s))*)([^\n]*))|^\s*(?:(-)(\s+(?:[^\@]|(?<!\s)\@|\@(?=\s))*))"
-		popupCont = []
-		packs = []
-		for cursor in self.view.sel():
-			line_region = self.view.line(cursor)
-			string = self.view.substr(line_region)
-			matches = re.findall(reg, string)
-
-			if not matches:
-				continue
-
-			pack = matches[0][2]
-
-			if pack and pack not in packs:
-				info = getPackInfo(pack)
-				infoToShow = [
-					"<p class='row'><span class='title'>Name: </span><span class='val'>" + pack + "</span></p>",
-					"<p class='row'><span class='title version'>Version: </span><span class='val version'>" + info.get('version', '') + "</span></p>",
-					"<p class='desc'>" + info.get('description', '') + "</p>"
-				]
-				packs.append(pack)
-				popupCont.append("".join(infoToShow))
-
-		if popupCont:
-			css = """<style>
-				html{background-color:#000000}
-				body{background-color:#000000}
-				.mainTitle{font-size:20px;font-weight: bold;padding: 5px 155px  ;margin:0 0 10px 0;}
-				.row{margin: 0; padding: 0px 20px}
-				.title{font-size:15px;}
-				.desc{font-size:12px;color:#B0A7FF;padding:0 20px}
-				.val{font-size:15px;color:#BDBDBD;padding:0 5px}
-				.version{font-size:13spx;}
-			</style>"""
-
-			popup_max_width = 400
-			popup_max_height = 600
-			html = "<html>"+css+"<body><h5 class='mainTitle'>Info</h5>" + "<br>".join(popupCont)+"</body></html>"
-			self.view.show_popup(html, 0, -1, popup_max_width, popup_max_height)
 
 class toggleInfoPanelCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
@@ -266,7 +232,7 @@ def show_info_in_panel(view):
 	if popupCont:
 		output_view = view.window().create_output_panel("info")
 		output_view.set_read_only(False)
-		text = ("\n" + u"┄"*100 + "\n").join(popupCont)
+		text = ("\n" + u"-"*100 + "\n").join(popupCont)
 		output_view.run_command("gs_replace_view_text", {"text": text, "nuke_cursors": False})
 		output_view.set_syntax_file("Packages/PackagesUI/syntax/Packinfo.sublime-syntax")
 		output_view.sel().clear()
