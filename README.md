@@ -31,7 +31,7 @@ Preferences -> Packages UI
 
 ## Screenshots
 
-![Demo](https://github.com/unknownuser88/PackagesUI/raw/demo/images/demo.gif)
+![Demo](https://github.com/unknownuser88/PackagesUI/raw/demo/images/demo1.gif)
 
-![Pack Info](https://github.com/unknownuser88/PackagesUI/raw/demo/images/packs_info.jpg)
+![Pack Info](https://github.com/unknownuser88/PackagesUI/raw/demo/images/packs_info1.jpg)
 
