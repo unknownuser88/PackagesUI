@@ -26,7 +26,6 @@ class ChangeFontSizeCommand(sublime_plugin.WindowCommand):
 			newSize = oldSize + (1 if plus else -1)
 			if newSize < 4 or newSize > 20:
 				return
-			print("newSize", newSize)
 			plistView.settings().set("font_size", newSize)
 
 class PackagesUiCommand(sublime_plugin.WindowCommand):
@@ -91,14 +90,18 @@ class RenderlistCommand(sublime_plugin.TextCommand):
 		installed_packages = sett.get('installed_packages', [])
 		ignored_packages = user_s.get('ignored_packages', [])
 
-		for index, pack in enumerate(installed_packages[::-1]):
+		plistA = []
+
+		for index, pack in enumerate(installed_packages):
 			nshan = bullet_disabled if pack in ignored_packages else bullet_enabled
 			pname = u"    {nshan} {packName}".format(packName=pack, nshan=nshan)
 			nameLen = len(pname)
 			space = " "*(60-int(nameLen))
-			e = "\n" if (index+1)%2==0  else "     |"
+			e = "\n" if (index + 1) % 2 == 0  else "     |"
 			l = u"{pname}{space}{e}".format(pname=pname,space=space, e=e)
-			self.view.insert(edit, 0, l)
+			plistA.append(l)
+
+		self.view.insert(edit, 0, "".join(plistA))
 
 		header = sublime.load_resource("Packages/PackagesUI/popups/header.html")
 		header += "\n" + "="*127 + "\n"
@@ -177,7 +180,7 @@ class openHomepageCommand(sublime_plugin.TextCommand):
 						webbrowser.open_new_tab(url)
 
 
-class toggleInfoPanelCommand(sublime_plugin.TextCommand):
+class showInfoCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 		view = self.view
 		popupCont = []

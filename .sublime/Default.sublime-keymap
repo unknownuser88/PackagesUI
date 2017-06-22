@@ -2,69 +2,37 @@
 	{
 		"keys": ["t"],
 		"command": "toggle_pack",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}]
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}]
 	}, {
 		"keys": ["r"],
 		"command": "renderlist",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}]
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}]
 	}, {
 		"keys": ["i"],
-		"command": "toggle_info_panel",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}]
+		"command": "show_info",
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}]
 	}, {
 		"keys": ["+"],
 		"command": "change_font_size",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}],
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}],
 		"args": {"plus": true}
 	}, {
 		"keys": ["-"],
 		"command": "change_font_size",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}],
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}],
 		"args": {"plus": false}
 	}, {
 		"keys": ["0"],
 		"command": "change_font_size",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}],
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}],
 		"args": {"plus": "reset"}
 	}, {
 		"keys": ["?"],
 		"command": "toggle_popup_help",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}]
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}]
 	}, {
 		"keys": ["h"],
 		"command": "open_homepage",
-		"context": [{
-			"key": "selector",
-			"operator": "equal",
-			"operand": "text.plist"
-		}]
+		"context": [{"key": "selector", "operator": "equal", "operand": "text.plist"}]
 	}
 ]
