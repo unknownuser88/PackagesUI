@@ -11,13 +11,21 @@ Preferences -> Packages UI
 
 **NOTE:** Use your mouse or up and down arrows to navigate in list of packages
 
-[t]   toggle package
+[t]		toggle package
 
-[i]   show package Info
+[h]		open home page
 
-[r]	  refresh view
+[i]		show info
 
-[+/-] change font size
+[r]		refresh view
+
+[+]		increase font size
+
+[-]		decrease font size
+
+[0]		reset font size
+
+[?]		help
 
 
 
@@ -25,5 +33,5 @@ Preferences -> Packages UI
 
 ![Demo](https://github.com/unknownuser88/PackagesUI/raw/demo/images/demo.gif)
 
-![Pack Info](https://github.com/unknownuser88/PackagesUI/raw/demo/images/packs_info.png)
+![Pack Info](https://github.com/unknownuser88/PackagesUI/raw/demo/images/packs_info.jpg)
 

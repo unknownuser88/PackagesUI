@@ -13,10 +13,11 @@ Preferences -> Packages UI
 
 NOTE: Use your mouse or up and down arrows to navigate in list of packages
 
-[t]   toggle package
-
-[i]   show package Info
-
-[r]	  refresh view
-
-[+/-] change font size
+	[t]		toggle package
+	[h]		open home page
+	[i]		show info
+	[r]		refresh view
+	[+]		increase font size
+	[-]		decrease font size
+	[0]		reset font size
+	[?]		help
