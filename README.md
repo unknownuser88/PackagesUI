@@ -9,7 +9,7 @@ Preferences->Packages UI
 
 ## Screenshots
 
-![Demo](https://raw.githubusercontent.com/unknownuser88/PackagesUI/raw/demo/images/demo.gif)
+![Demo](https://raw.githubusercontent.com/unknownuser88/PackagesUI/demo/images/demo.gif)
 
-![Pack Info](https://raw.githubusercontent.com/unknownuser88/PackagesUI/raw/demo/images/packs_info.png)
+![Pack Info](https://raw.githubusercontent.com/unknownuser88/PackagesUI/demo/images/packs_info1.jpg)
 
